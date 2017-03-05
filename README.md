@@ -40,6 +40,7 @@ I took these as a starting point for this project. I restructured the code and a
 * use these scripts at your own risk, no warranties for a correct and successful migration are given
 * it's recommended to test your issue migration first with a test project on Github
 * input to the import script is the XML export file of your JIRA project, see below
+* the import/export was tested with the current java.net JIRA (v6.2.3), other versions might produce different XML export content
 * your target Github project should already exist with the issue tracker enabled, but without any existing issues
 
 # Getting started
