@@ -81,7 +81,6 @@ class Project:
       'created_at': self._convert_to_iso(item.created.text),
       'closed_at': closed_at,
       'updated_at': self._convert_to_iso(item.updated.text),
-#     'assignee': item.assignee.text
       'closed': closed,
       "labels": [],
       'comments': [],
@@ -97,8 +96,6 @@ class Project:
   def _convert_to_iso(self, timestamp):
     dt = parse(timestamp)
     return dt.isoformat()
-    # dt_utc = dt.astimezone(timezone('UTC'))
-    # return dt_utc.isoformat()
 
   def _add_milestone(self, item):
     try:

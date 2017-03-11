@@ -19,12 +19,6 @@ repo = raw_input('GitHub project name: ')
 user = raw_input('GitHub username: ')
 pw = getpass.getpass('GitHub password: ')
 
-#jiraProj = 'GLAZEDLISTS'
-#us = 'hbrands'
-#repo = 'jira-import-test'
-#user = 'hbrands'
-#pw = 'hb_buhtiG6'
-
 Options = namedtuple("Options", "user passwd account repo")
 opts = Options(user=user, passwd=pw, account=us, repo=repo)
 

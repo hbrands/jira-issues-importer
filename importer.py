@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 
-#from collections import namedtuple
-#import project
-#import human_curl as hurl
 import requests
-#import json
 import random
-#import string
 import time
 import re
 
@@ -42,8 +37,6 @@ class Importer:
         data = {'title': mkey}
         r = requests.post(milestone_url, json=data, auth=(self.options.user, self.options.passwd), timeout=Importer._DEFAULT_TIME_OUT)
         
-#        r = hurl.post(milestone_url, json.dumps(data),
-#            auth=(self.options.user, self.options.passwd), timeout=Importer._DEFAULT_TIME_OUT)
         # overwrite histogram data with the actual milestone id now
         if r.status_code == 201:
           content = r.json()
@@ -51,8 +44,6 @@ class Importer:
           print mkey
         else:
           if r.status_code == 422: # already exists
-#            ms = json.loads(hurl.get(self.github_url + '/milestones?state=open').content)
-#           ms += json.loads(hurl.get(self.github_url + '/milestones?state=closed').content)
             ms = requests.get(milestone_url + '?state=open', timeout=Importer._DEFAULT_TIME_OUT).json()
             ms += requests.get(milestone_url + '?state=closed', timeout=Importer._DEFAULT_TIME_OUT).json()
             f = False
@@ -77,8 +68,6 @@ class Importer:
     print
     for lkey in self.project.get_components().iterkeys():
       data = {'name': lkey, 'color': '%.6x' % random.randint(0, 0xffffff)}
-#      r = hurl.post(label_url, json.dumps(data),
-#                  auth=(self.options.user, self.options.passwd), timeout=Importer._DEFAULT_TIME_OUT)
       r = requests.post(label_url, json=data, auth=(self.options.user, self.options.passwd), timeout=Importer._DEFAULT_TIME_OUT)
       if r.status_code == 201:
         print lkey
@@ -103,8 +92,6 @@ class Importer:
 
         self.convert_relationships_to_comments(issue)
           
-        #closed = issue['closed']
-        #del issue['closed']
         issue_comments = issue['comments']
         del issue['comments']
         comments = []
