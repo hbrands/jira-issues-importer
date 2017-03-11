@@ -40,6 +40,7 @@ I took these as a starting point for this project. I restructured the code and a
 * use these scripts at your own risk, no warranties for a correct and successful migration are given
 * it's recommended to test your issue migration first with a test project on Github
 * input to the import script is the XML export file of your JIRA project, see below
+* the import/export was tested with the current java.net JIRA (v6.2.3), other versions might produce different XML export content
 * your target Github project should already exist with the issue tracker enabled, but without any existing issues
 
 # Getting started
@@ -56,7 +57,7 @@ I took these as a starting point for this project. I restructured the code and a
   * the Github user and password for authentication
 * the import process will then
   * read the JIRA XML export file and create an in-memory project representation of the xml file contents
-  * import the milestones with the regular (Github Milestone API](https://developer.github.com/v3/issues/milestones/)
+  * import the milestones with the regular [Github Milestone API](https://developer.github.com/v3/issues/milestones/)
   * import the labels with the regular [Github Label API](https://developer.github.com/v3/issues/labels/)
   * import the issues with comments with the [Github Import API](https://gist.github.com/jonmagic/5282384165e0f86ef105)
     * references to issues in the comments are replaced with placeholders in this step
