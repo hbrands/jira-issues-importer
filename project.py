@@ -147,7 +147,8 @@ class Project:
               self._project['Issues'][-1][inwardlink.get("description").replace(' ', '-')].append(issuekey.text)
     except AttributeError:
       pass
-
+    except KeyError:
+          print 'KeyError at ' + item.key.text
   
   def _htmlentitydecode(self, s):
     if s is None: return ''
