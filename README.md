@@ -1,6 +1,6 @@
 # JIRA issues importer
 
-Python 2.x scripts for importing JIRA issues in XML format into an existing Github project without existing issues
+Python 3.x scripts for importing JIRA issues in XML format into an existing Github project without existing issues
 
 # Background
 
@@ -35,12 +35,10 @@ I took these as a starting point for this project. I restructured the code and a
 
 # Assumptions and prerequisites
 
-* the migration scripts are written in Python 2.x. In particular, they were tested with Python 2.7 on Windows
-* python modules used are getpass, collections, lxml, htmlentitydefs, dateutil.parser, re, requests, random, time
 * use these scripts at your own risk, no warranties for a correct and successful migration are given
 * it's recommended to test your issue migration first with a test project on Github
 * input to the import script is the XML export file of your JIRA project, see below
-* the import/export was tested with the current java.net JIRA (v6.2.3), other versions might produce different XML export content
+* works with JIRA Cloud, as of March 2019
 * your target Github project should already exist with the issue tracker enabled
 * there should be no existing issues and pull requests - else the issue id mapping will be incorrect
 
