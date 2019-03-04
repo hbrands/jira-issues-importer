@@ -18,6 +18,8 @@ I took these as a starting point for this project. I restructured the code and a
 * Import JIRA milestones as Github milestones
 * Import JIRA labels as Github labels
 * Import JIRA components as Github labels
+* Configure colour scheme for labelling on import
+* Import multiple files to help overcome the export limit of 1000 (export multiple files by by using the JIRA key column as a range)
 * Import JIRA issues as Github issues where
   * issue ids are mapped one by one, e.g. PROJECT-1 becomes GH-1 and PROJECT-4711 becomes GH-4711
   * both issue label and component assignments are mapped to Github labels
@@ -48,12 +50,15 @@ I took these as a starting point for this project. I restructured the code and a
 * run `pip install -r requirements.txt`
 * export the desired JIRA issues of your project (see section below)
 * to start the Github import, execute 'python main.py'
+* edit the `labelcolourselector.py` if you want to change the logic of how the colours are set on labels
 * on startup it will ask for
-  * the JIRA XML export file name
+  * the JIRA XML export file name (use a semi-colon to enter multiple XML paths)
   * the JIRA project name
+  * the `<statusCategoryId>` element's `id` attribute that signifies an issue as Done 
   * the Github account name (user or organization)
   * the target Github repository name
   * the Github user and password for authentication
+  * the index at which to start from, enter 0 to begin, if you have a failure, enter the index number the import failed at. Entering a number higher than 0 will stop labels from re-importing and milestones will re-match to existing.
 * the import process will then
   * read the JIRA XML export file and create an in-memory project representation of the xml file contents
   * import the milestones with the regular [Github Milestone API](https://developer.github.com/v3/issues/milestones/)
@@ -69,7 +74,7 @@ I took these as a starting point for this project. I restructured the code and a
 
 1. Select project you are interested in
 
-1. Specify Query criteria, Sort as needed
+1. Specify Query criteria, Sort as needed, if you have more than 1000 items use something like eg. `issuekey < PRO-1000 AND issuekey > PRO-2000` to select a range and export each set into separate XML files
 
 1. From results page, click on Export icon at the top right of page
 

@@ -27,7 +27,52 @@ class Importer:
         milestone_url = self.github_url + '/milestones'
         print('Importing milestones...', milestone_url)
         print
+
+        # Check existing first
+        existing = list()
+
+        def get_milestone_list(url):
+            return requests.get(url, auth=(self.options.user,
+                                           self.options.passwd),
+                                timeout=Importer._DEFAULT_TIME_OUT)
+
+        def get_next_page_url(url):
+            return url.replace('<', '').replace('>', '').replace('; rel="next"', '')
+
+        milestone_pages = list()
+        ms = get_milestone_list(milestone_url + '?state=all')
+        milestone_pages.append(ms.json())
+
+        links = ms.headers['Link'].split(',')
+        nextPageUrl = get_next_page_url(links[0])
+
+        while nextPageUrl != None:
+            time.sleep(1)
+            nextPageUrl = None
+
+            for l in links:
+                if 'rel="next"' in l:
+                    nextPageUrl = get_next_page_url(l)
+
+            if nextPageUrl != None:
+                ms = get_milestone_list(nextPageUrl)
+                links = ms.headers['Link'].split(',')
+                milestone_pages.append(ms.json())
+
+        for ms_json in milestone_pages:
+            for m in ms_json:
+                if m['title'] in self.project.get_milestones().keys():
+                    self.project.get_milestones()[m['title']] = m['number']
+                    print(m['title'], 'found')
+                    existing.append(m['title'])
+                else:
+                    print(m['title'], 'not found')
+
+        # Export new ones
         for mkey in self.project.get_milestones().keys():
+            if mkey in existing:
+                continue
+
             data = {'title': mkey}
             r = requests.post(milestone_url, json=data, auth=(
                 self.options.user, self.options.passwd), timeout=Importer._DEFAULT_TIME_OUT)
@@ -37,26 +82,6 @@ class Importer:
                 content = r.json()
                 self.project.get_milestones()[mkey] = content['number']
                 print(mkey)
-            else:
-                if r.status_code == 422:  # already exists
-                    ms = requests.get(
-                        milestone_url + '?state=open', timeout=Importer._DEFAULT_TIME_OUT).json()
-                    ms.update(requests.get(milestone_url + '?state=closed',
-                                           timeout=Importer._DEFAULT_TIME_OUT).json())
-                    f = False
-
-                    for m in ms:
-                        if m['title'] == mkey:
-                            self.project.get_milestones()[mkey] = m['number']
-                            print(mkey, 'found')
-                            f = True
-                            break
-
-                    if not f:
-                        exit('Could not find milestone: ' + mkey)
-
-                else:
-                    print('Failure!', r.status_code, r.content, r.headers)
 
     def import_labels(self, colourSelector):
         """
@@ -77,7 +102,7 @@ class Importer:
                 print('Failure importing label ' + lkey,
                       r.status_code, r.content, r.headers)
 
-    def import_issues(self):
+    def import_issues(self, start_from_count):
         """
         Starts the issue import into GitHub:
         First the milestone id is captured for the issue.
@@ -86,7 +111,15 @@ class Importer:
         references to JIRA issues in comments are replaced with a placeholder    
         """
         print('Importing issues...')
+
+        count = 0
+
         for issue in self.project.get_issues():
+            if start_from_count > count:
+                continue
+
+            print("Index = ", count)
+
             if 'milestone_name' in issue:
                 issue['milestone'] = self.project.get_milestones()[
                     issue['milestone_name']]
@@ -102,6 +135,7 @@ class Importer:
                     dict((k, self._replace_jira_with_github_id(v)) for k, v in comment.items()))
 
             self.import_issue_with_comments(issue, comments)
+            count += 1
 
     def import_issue_with_comments(self, issue, comments):
         """
@@ -166,7 +200,7 @@ class Importer:
                     "Failed to check GitHub issue import status url: {} due to unexpected HTTP status code: {}"
                     .format(status_url, response.status_code)
                 )
-            
+
             status = response.json()['status']
             if status != 'pending':
                 break

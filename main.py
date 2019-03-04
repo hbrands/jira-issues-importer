@@ -6,29 +6,35 @@ from importer import Importer
 from labelcolourselector import LabelColourSelector
 
 
-def read_xml_sourcefile(file_name):
-    all_text = open(file_name).read()
-    return objectify.fromstring(all_text)
+def read_xml_sourcefile(file_names):
+    files = list()
+    for file_name in file_names.split(';'):
+        all_text = open(file_name).read()
+        files.append(objectify.fromstring(all_text))
+
+    return files
 
 
-# input('Path to JIRA XML query file: ')
-file_name = 'C:\\Users\\dougl\\Desktop\\SearchRequest.xml'
-all_xml = read_xml_sourcefile(file_name)
+file_names = input(
+    'Path to JIRA XML query file (semi-colon separate for multiple files): ')
+all_xml_files = read_xml_sourcefile(file_names)
 
 jira_proj = input('JIRA project name to use: ')
 jira_done_id = input('JIRA Done statusCategory ID: ')
 us = input('GitHub account name: ')
 repo = input('GitHub project name: ')
 user = input('GitHub username: ')
-pw = getpass.getpass('GitHub password: ')
+pw = input('GitHub password: ')
+start_from_issue = input('Start from (0 = beginning): ')
 
 Options = namedtuple("Options", "user passwd account repo")
 opts = Options(user=user, passwd=pw, account=us, repo=repo)
 
 project = Project(jira_proj, jira_done_id)
 
-for item in all_xml.channel.item:
-    project.add_item(item)
+for f in all_xml_files:
+    for item in f.channel.item:
+        project.add_item(item)
 
 project.prettify()
 
@@ -45,6 +51,9 @@ importer = Importer(opts, project)
 colourSelector = LabelColourSelector(project)
 
 importer.import_milestones()
-importer.import_labels(colourSelector)
-importer.import_issues()
+
+if int(start_from_issue) == 0:
+    importer.import_labels(colourSelector)
+
+importer.import_issues(int(start_from_issue))
 importer.post_process_comments()

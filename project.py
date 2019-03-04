@@ -62,6 +62,7 @@ class Project:
         print('  Labels:')
         hist(self._project['Labels'])
         print
+        print('Total Issues to Import: %d' % len(self._project['Issues']))
 
     def _projectFor(self, item):
         try:
