@@ -26,10 +26,10 @@ I took these as a starting point for this project. I restructured the code and a
   * issue states (open or closed) are considered
   * issue comments are mapped to Github comments
     * JIRA issue references in normal and relationship comments are replaced by references to the Github issue id  
- 
-# Caveats 
+
+# Caveats
  * this project does not try to map JIRA users to Github users
-   * the Github user which performs the import will appear as issue creator, the original JIRA issue reporter is noted in the first comment 
+   * the Github user which performs the import will appear as issue creator, the original JIRA issue reporter is noted in the first comment
    * the Github user which performs the import will also appear as comment creator, as the Github API doesn't support that (yet),
      the original JIRA commentator is noted in the comment text
 
@@ -46,9 +46,9 @@ I took these as a starting point for this project. I restructured the code and a
 
 # Getting started
 
-* ensure you have installed the proper Python environment with the needed modules
-* clone this repository or copy the three Python files main.py, project.py and importer.py to your system
-* export the desired JIRA issues of your project (see section below) 
+* clone this repository
+* run `pip install -r requirements.txt`
+* export the desired JIRA issues of your project (see section below)
 * to start the Github import, execute 'python main.py'
 * on startup it will ask for
   * the JIRA XML export file name
