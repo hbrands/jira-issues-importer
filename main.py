@@ -28,16 +28,14 @@ jira_project = config['Settings']['jira_project']
 jira_done_id = config['Settings']['jira_done_id']
 user_or_org = config['Settings']['user_or_org']
 repo_name = config['Settings']['repo_name']
-username = config['Settings']['username']
-password = config['Settings']['password']
+access_token = config['Settings']['access_token']
 start_from_issue = config['Settings']['start_from_issue']
-start_from_issue = 0 if (start_from_issue=='') else start_from_issue
 
 file_names = config['Settings']['file_names']
 all_xml_files = read_xml_sourcefile(file_names)
 
-Options = namedtuple("Options", "user passwd account repo")
-opts = Options(user=username, passwd=password, account=user_or_org, repo=repo_name)
+Options = namedtuple("Options", "token account repo")
+opts = Options(token=access_token, account=user_or_org, repo=repo_name)
 
 project = Project(jira_project, jira_done_id)
 
@@ -45,9 +43,10 @@ for f in all_xml_files:
     for item in f.channel.item:
         project.add_item(item)
 
+print('*******************************************************')
 project.prettify()
-
 input('Press any key to begin...')
+print('*******************************************************')
 
 '''
 Steps:

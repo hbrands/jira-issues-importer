@@ -53,14 +53,20 @@ class Project:
                 print(('%30s (%5d): ' + h[key] * '#') % (key, h[key]))
             print
 
-        print(self.name + ':\n  Milestones:')
+        print(self.name + ':\n')
+        print('-------------------------------------------------------')
+        print('  Milestones:')
         hist(self._project['Milestones'])
+        print('-------------------------------------------------------')
         print('  Types:')
         hist(self._project['Types'])
+        print('-------------------------------------------------------')
         print('  Components:')
         hist(self._project['Components'])
+        print('-------------------------------------------------------')
         print('  Labels:')
         hist(self._project['Labels'])
+        print('-------------------------------------------------------')
         print
         print('Total Issues to Import: %d' % len(self._project['Issues']))
 
@@ -117,7 +123,7 @@ class Project:
             self._project['Issues'][-1]['labels'].append(item.component.text)
         except AttributeError:
             pass
-        
+
         try:
             for label in item.labels.label:
                 self._project['Labels'][label.text] += 1
