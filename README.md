@@ -41,14 +41,8 @@
 * Export the desired JIRA issues of your project (see section below)
 * Edit the `labelcolourselector.py` if you want to change the logic of how the colours are set on labels
 * Start the Github import by executing 'python main.py'
-* On startup it will ask for
-  * The JIRA XML export file name (use a semi-colon to enter multiple XML paths)
-  * The JIRA project name
-  * The `<statusCategoryId>` element's `id` attribute that signifies an issue as Done (in JIRA, the "Issue Current Status ID")
-  * The Github account name (user or organization)
-  * The target Github repository name
-  * The Github user and password for authentication
-  * The index at which to start (0 is the default).  If you have a failure, enter the index number the import failed at.  Entering a number higher than 0 will stop labels from re-importing and milestones will re-match to existing.
+* Copy `config.sample.init` as `config.ini`
+* Fill out your config values in config.ini.  Note that this file is Git ignored.
 * The import process will then
   * Read the JIRA XML export file and create an in-memory project representation of the xml file contents
   * Import the milestones with the regular [Github Milestone API](https://developer.github.com/v3/issues/milestones/)
