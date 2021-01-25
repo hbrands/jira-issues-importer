@@ -1,6 +1,8 @@
 # JIRA issues importer
 
-Python 2.x scripts for importing JIRA issues in XML format into an existing Github project without existing issues
+**Python 2.x** scripts for importing JIRA issues in XML format into an existing Github project without existing issues.
+
+For Python 3.x, see https://github.com/ultimategrandson/jira-issues-importer.
 
 # Background
 
