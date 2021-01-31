@@ -24,6 +24,7 @@
    * The Github user which performs the import will appear as issue creator, the original JIRA issue reporter is noted in the first comment
    * The Github user which performs the import will also appear as comment creator, as the Github API doesn't support that (yet),
      the original JIRA commentator is noted in the comment text
+ * Labels are case sensitive!  If you attempt to import an issue with "Bug" and the label "bug" exists, it will fail.  Cases must align.
 
 # Assumptions and prerequisites
 

@@ -35,41 +35,34 @@ class Importer:
         # Check existing first
         existing = list()
 
-        def get_milestone_list(url):
-            return requests.get(append_token(url, self),
-                                timeout=Importer._DEFAULT_TIME_OUT)
-
-        def get_next_page_url(url):
-            return url.replace('<', '').replace('>', '').replace('; rel="next"', '')
+        def get_milestone_list(url, page):
+            return requests.get(url + '&state=all&per_page=100&page=' + str(page), timeout=Importer._DEFAULT_TIME_OUT)
 
         milestone_pages = list()
-        ms = get_milestone_list(milestone_url + '?state=all')
-        milestone_pages.append(ms.json())
+        page = 0
+        response = get_milestone_list(milestone_url, page)
+        responseJson = response.json();
 
-        links = ms.headers['Link'].split(',')
-        nextPageUrl = get_next_page_url(links[0])
+        if len(responseJson) > 0:
 
-        while nextPageUrl != None:
-            time.sleep(1)
-            nextPageUrl = None
+            milestone_pages.append(responseJson)
 
-            for l in links:
-                if 'rel="next"' in l:
-                    nextPageUrl = get_next_page_url(l)
+            while len(responseJson) == 100:
+                time.sleep(1)
+                page = page + 1
 
-            if nextPageUrl != None:
-                ms = get_milestone_list(nextPageUrl)
-                links = ms.headers['Link'].split(',')
-                milestone_pages.append(ms.json())
+                response = get_milestone_list(milestone_url, page)
+                responseJson = response.json();
+                milestone_pages.append(responseJson)
 
-        for ms_json in milestone_pages:
-            for m in ms_json:
-                if m['title'] in self.project.get_milestones().keys():
-                    self.project.get_milestones()[m['title']] = m['number']
-                    print(m['title'], 'found')
-                    existing.append(m['title'])
-                else:
-                    print(m['title'], 'not found')
+            for ms_json in milestone_pages:
+                for m in ms_json:
+                    if m['title'] in self.project.get_milestones().keys():
+                        self.project.get_milestones()[m['title']] = m['number']
+                        print(m['title'], 'found')
+                        existing.append(m['title'])
+                    else:
+                        print(m['title'], 'not found')
 
         # Export new ones
         for mkey in self.project.get_milestones().keys():
