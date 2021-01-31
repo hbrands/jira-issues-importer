@@ -40,9 +40,9 @@
 * Run `pip install -r requirements.txt`
 * Export the desired JIRA issues of your project (see section below)
 * Edit the `labelcolourselector.py` if you want to change the logic of how the colours are set on labels
-* Start the Github import by executing 'python main.py'
 * Copy `config.sample.init` as `config.ini`
 * Fill out your config values in config.ini.  Note that this file is Git ignored.
+* Start the Github import by executing 'python main.py'
 * The import process will then
   * Read the JIRA XML export file and create an in-memory project representation of the xml file contents
   * Import the milestones with the regular [Github Milestone API](https://developer.github.com/v3/issues/milestones/)
